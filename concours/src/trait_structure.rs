@@ -1,18 +1,18 @@
 use std::clone;
 
 pub trait structure_donnee{
-    fn new() -> Self;
+    fn new(x : i32) -> Self;
 
-    fn add(x : i32) -> Self;
+    fn add(&mut self, x : i32);
 
-    fn remove(x : i32) -> Self;
+    fn remove(&mut self, x : i32);
 
-    fn delete();
+    fn parcourir(&self);
 
     fn fragmenter(&self, taille_max : usize) -> Vec<Self> where Self: Sized + Clone;
 
-    fn serialiser();
+    fn serialiser(&self);
 
-    fn deserialiser();
+    fn deserialiser(&self);
 
 }

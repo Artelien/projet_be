@@ -98,15 +98,19 @@ impl structure_donnee for Arbre {
         let mut nb = 0;
         let mut current = Arbre::new(); 
 
+        print!("\nTest 1 :");
         for elem in buffer{
+            print!("{} ", elem.value);
+                current.add(elem.value);
                 nb += 1;
                 if nb % taille_max == 0 {
                     result.push(current);
                     current = Arbre::new();
                 }
-                current.add(elem.value);
         }
-        
+        if nb % taille_max != 0 {
+            result.push(current);
+        }
         result
     }
     

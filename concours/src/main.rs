@@ -14,6 +14,7 @@ fn main() {
     test.add(5);
     test.add(6);
     test.add(7);
+    test.add(8);
     test.map(|x| {print!("{} ", x); x});
 
     let mut tab = test.fragmenter(2);

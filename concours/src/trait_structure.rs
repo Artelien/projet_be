@@ -9,7 +9,7 @@ pub trait structure_donnee{
 
     fn map(&self,  f: impl Fn(i32) -> i32 + Copy) -> Self;
 
-    fn fragmenter(&self, taille_max : usize) -> Vec<Self> where Self: Sized + Clone;
+    fn fragmenter(self, taille_max : usize) -> Vec<Self> where Self: Sized + Clone;
 
     fn serialiser(&self);
 

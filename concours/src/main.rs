@@ -10,5 +10,19 @@ fn main() {
     test.add(1);
     test.add(2);
     test.add(3);
-    print!("{:?}", test);
+    test.add(4);
+    test.add(5);
+    test.add(6);
+    test.add(7);
+    test.map(|x| {print!("{} ", x); x});
+
+    let mut tab = test.fragmenter(2);
+    
+    print!("\nFragmentation : \n");
+
+    for elem in tab{
+        print!("    Nouvelle arbe : ");
+        elem.map(|x| {print!("{} ", x); x});
+        println!();
+    }
 }

@@ -1,10 +1,12 @@
+use std::vec;
+
 use crate::trait_structure::{self, structure_donnee};
 
 
 #[derive (Clone, Debug)]
 pub struct Arbre{
     root : Option<Node>,
-    size : i32,
+    size : usize,
 }
 
 #[derive (Clone, Debug)]
@@ -38,13 +40,24 @@ impl Node {
     }
 
 
-        fn map(&self,  f: impl Fn(i32) -> i32 + Copy) -> Node {
+    fn map(&self,  f: impl Fn(i32) -> i32 + Copy) -> Node {
         Node { 
             value: f(self.value),
             left: self.left.as_ref().map(|l| Box::new(l.map(f))), 
             right: self.right.as_ref().map(|r| Box::new(r.map(f))),
         }
     }
+
+    fn traverse(mut self, buffer: &mut Vec<Node>) {
+        if let Some(left) = self.left.take() {
+            left.traverse(buffer);
+        }
+        if let Some(right) = self.right.take() {
+            right.traverse(buffer);
+        }
+        buffer.push(self);
+    }
+
 
 }
 
@@ -74,8 +87,27 @@ impl structure_donnee for Arbre {
         }
     }
 
-    fn fragmenter(&self, taille_max : usize) -> Vec<Self> where Self: Sized + Clone {
-        todo!()
+    fn fragmenter(self, taille_max : usize) -> Vec<Self> where Self: Sized + Clone {
+        let mut result = Vec::new();
+        let mut buffer: Vec<Node>  = Vec::new();
+
+        if let Some(n) = self.root{
+            n.traverse(&mut buffer);
+        }
+
+        let mut nb = 0;
+        let mut current = Arbre::new(); 
+
+        for elem in buffer{
+                nb += 1;
+                if nb % taille_max == 0 {
+                    result.push(current);
+                    current = Arbre::new();
+                }
+                current.add(elem.value);
+        }
+        
+        result
     }
     
     fn serialiser(&self) {

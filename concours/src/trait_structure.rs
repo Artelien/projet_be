@@ -1,7 +1,7 @@
 use std::clone;
 
 pub trait structure_donnee{
-    fn new(x : i32) -> Self;
+    fn new() -> Self;
 
     fn add(&mut self, x : i32);
 

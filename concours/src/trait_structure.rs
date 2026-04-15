@@ -32,7 +32,7 @@ pub trait structure_donnee {
         new
     }
 
-    fn union(&mut self, other: Self)
+    fn union(&mut self, other: &Self)
     where
         Self: Sized,
     {
@@ -42,7 +42,7 @@ pub trait structure_donnee {
         }
     }
 
-    fn difference(&mut self, other: Self)
+    fn difference(&mut self, other: &mut Self)
     where
         Self: Sized,
     {
@@ -62,7 +62,7 @@ pub trait structure_donnee {
         while let Some(value) = iter.next() {
             if self.there_is(*value) {
                 self.remove(*value);
-                other.remove(*value);
+                // other.remove(*value);
             }
         }
     }

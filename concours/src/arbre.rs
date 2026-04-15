@@ -165,14 +165,6 @@ impl structure_donnee for Arbre {
         todo!()
     }
 
-    fn difference(self, other: Self) -> Self {
-        todo!()
-    }
-
-    fn difference_symetrique(self, other: Self) -> Self {
-        todo!()
-    }
-
     fn intersection(self, other: Self) -> Self {
         todo!()
     }

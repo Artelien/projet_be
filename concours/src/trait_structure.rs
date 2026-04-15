@@ -1,6 +1,4 @@
-use std::clone;
-
-pub trait structure_donnee {
+pub trait StructureDonnee {
     fn new() -> Self;
 
     fn add(&mut self, value: i32);
@@ -18,7 +16,7 @@ pub trait structure_donnee {
     where
         Self: Sized + Clone;
 
-    fn intersection(self, other: Self) -> Self
+    fn intersection(self, other: &Self) -> Self
     where
         Self: Sized,
     {

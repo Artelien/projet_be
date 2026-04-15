@@ -1,7 +1,7 @@
 mod arbre;
 mod trait_structure;
 
-use crate::{arbre::Arbre, trait_structure::structure_donnee};
+use crate::{arbre::Arbre, trait_structure::StructureDonnee};
 
 fn main() {
     /*
@@ -10,15 +10,9 @@ fn main() {
      *
      */
     let mut test = Arbre::new();
-    test.add(1);
-    test.add(2);
-    test.add(3);
-    test.add(4);
-    test.add(5);
-    test.add(6);
-    test.add(7);
-    test.add(7);
-    test.add(8);
+    for i in 0..10 {
+        test.add(i);
+    }
 
     // test map
     test.map(|x| {

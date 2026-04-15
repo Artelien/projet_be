@@ -1,6 +1,6 @@
-use std::{cmp::Ordering, vec};
+use std::cmp::Ordering;
 
-use crate::trait_structure::structure_donnee;
+use crate::trait_structure::StructureDonnee;
 
 #[derive(Clone, Debug)]
 pub struct Arbre {
@@ -59,11 +59,11 @@ impl Node {
     }
 }
 
-pub struct Iterateur_arbre<'a> {
+pub struct IterateurArbre<'a> {
     stack: Vec<&'a Node>,
 }
 
-impl<'a> Iterator for Iterateur_arbre<'a> {
+impl<'a> Iterator for IterateurArbre<'a> {
     type Item = &'a i32;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -80,16 +80,16 @@ impl<'a> Iterator for Iterateur_arbre<'a> {
 }
 
 impl Arbre {
-    pub fn iter(&self) -> Iterateur_arbre {
+    pub fn iter(&self) -> IterateurArbre<'_> {
         let mut stack = Vec::new();
         if let Some(root) = &self.root {
             stack.push(root);
         }
-        Iterateur_arbre { stack }
+        IterateurArbre { stack }
     }
 }
 
-impl structure_donnee for Arbre {
+impl StructureDonnee for Arbre {
     fn new() -> Self {
         Self {
             root: None,
@@ -162,10 +162,6 @@ impl structure_donnee for Arbre {
     }
 
     fn deserialiser(&self) {
-        todo!()
-    }
-
-    fn intersection(self, other: Self) -> Self {
         todo!()
     }
 

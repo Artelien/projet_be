@@ -1,4 +1,4 @@
-use std::cmp::Ordering;
+use std::{cmp::Ordering, ops::{Deref, DerefMut}};
 
 use crate::trait_structure::StructureDonnee;
 
@@ -57,6 +57,80 @@ impl Node {
         }
         buffer.push(self);
     }
+
+
+    fn remove(&mut self, value: i32){
+        if value == self.value {
+            if let Some(remplacement) = Node::delete_node(Some(Box::new(Node {
+                value: self.value,
+                left: self.left.take(),
+                right: self.right.take(),
+            }))) {
+                self.value = remplacement.value;
+                self.left  = remplacement.left;
+                self.right = remplacement.right;
+            } 
+        } else if value < self.value {
+            if let Some(l) = self.left.as_mut() {
+                if l.value == value && l.is_leaf() {
+                    self.left = None;
+                } else {
+                    l.remove(value);
+                }
+            } 
+        } else {
+            if let Some(r) = self.right.as_mut(){
+                if r.value == value && r.is_leaf() {
+                    self.right = None;
+                } else {
+                    r.remove(value);
+                }
+            }
+        } 
+    }
+
+
+    fn successeur(&self) -> &Self{
+        let mut succ = self.right.as_ref().unwrap();
+        while let Some(l) = succ.left.as_ref() {
+            succ = l;
+        }
+        succ
+    }
+
+
+    fn delete_node(noeud: Option<Box<Node>>) -> Option<Box<Node>> {
+        match noeud {
+            None => None,
+
+            Some(n) if n.left.is_none() && n.right.is_none() => {
+                None // cas 1 : feuille — on supprime directement
+            }
+
+            Some(n) if n.left.is_none() => {
+                n.right // cas 2a : un seul enfant à droite
+            }
+
+            Some(n) if n.right.is_none() => {
+                n.left // cas 2b : un seul enfant à gauche
+            }
+
+            Some(mut n) => {
+                // cas 3 : deux enfants
+                // on remplace par le plus petit de droite (successeur infixe)
+                let succ_value = n.right.as_ref().unwrap().successeur().value;
+                n.value = succ_value;
+                // on supprime le successeur du sous-arbre droit
+                n.right = Node::delete_node(n.right.take());
+                Some(n)
+            }
+        }
+
+    }
+
+    fn is_leaf(&self) -> bool{
+        self.left.is_none() && self.right.is_none()
+    }
 }
 
 pub struct IterateurArbre<'a> {
@@ -93,7 +167,7 @@ impl StructureDonnee for Arbre {
     fn new() -> Self {
         Self {
             root: None,
-            size: 1,
+            size: 0,
         }
     }
 
@@ -117,9 +191,15 @@ impl StructureDonnee for Arbre {
         false
     }
 
-    // a verifier l utilite
     fn remove(&mut self, value: i32) {
-        todo!()
+        if let Some(node) = self.root.as_mut() {
+            if node.value != value || !node.is_leaf() {
+                node.remove(value);
+            } else {
+                self.root = None;
+            }
+        }
+        self.size -= 1;
     }
 
     fn map(&self, f: impl Fn(i32) -> i32 + Copy) -> Arbre {

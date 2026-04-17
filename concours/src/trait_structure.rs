@@ -16,7 +16,7 @@ pub trait StructureDonnee {
     where
         Self: Sized + Clone;
 
-    fn intersection(self, other: &Self) -> Self
+    fn intersection(&self, other: &Self) -> Self
     where
         Self: Sized,
     {
@@ -56,12 +56,14 @@ pub trait StructureDonnee {
     where
         Self: Sized,
     {
-        let mut iter = other.iter();
-        while let Some(value) = iter.next() {
-            if self.there_is(*value) {
-                self.remove(*value);
-                // other.remove(*value);
-            }
+
+        let communs : Vec<i32> = other.iter().filter(|&&value| self.there_is(value)).copied().collect();
+
+        
+
+        for x in communs{
+            self.remove(x);
+            other.remove(x);
         }
     }
 

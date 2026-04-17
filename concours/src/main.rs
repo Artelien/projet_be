@@ -42,9 +42,47 @@ fn main() {
     // utilisation de split et union avec un vec
     let (gauche, droite) = tab.split_at_mut(1);
     let a = &mut gauche[0];
-    let b = &droite[0];
+    let b = &mut droite[0];
     a.union(b);
     a.map(|x| {
+        print!("{} ", x);
+        x
+    });
+    println!();
+    b.map(|x| {
+        print!("{} ", x);
+        x
+    });
+    println!("\nDifference sysmetrique ");
+
+    a.difference_symetrique(b);
+    a.map(|x| {
+        print!("{} ", x);
+        x
+    });
+
+    println!();
+    b.map(|x| {
+        print!("{} ", x);
+        x
+    });
+
+    // let c = a.intersection(b);
+    let mut new = Arbre::new();
+    for elem in &tab {
+        let mut iter = elem.iter();
+        while let Some(value) = iter.next(){
+            new.add(*value);
+        }
+    }
+    new.map(|x| {
+        print!("{} ", x);
+        x
+    });
+
+    println!();
+    new.difference(&mut tab[0]);
+    new.map(|x| {
         print!("{} ", x);
         x
     });

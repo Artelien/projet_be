@@ -2,6 +2,7 @@ mod tree;
 mod trait_structure;
 
 use crate::{tree::Arbre, trait_structure::StructureDonnee};
+use rand::Rng;
 
 fn main() {
     /*
@@ -10,8 +11,14 @@ fn main() {
      *
      */
     let mut test = Arbre::new();
+    let mut rng = rand::thread_rng();
+    let mut vec: Vec<i32> = Vec::new();
     for i in 0..10 {
-        test.add(i);
+        vec.push(rng.gen_range(0..500));
+    }
+
+    for elem in &vec {
+        test.add(*elem);
     }
 
     // test map
@@ -75,6 +82,13 @@ fn main() {
             new.add(*value);
         }
     }
+
+    println!("New : {:?}", new);
+    new.remove(*vec.get(2).unwrap());
+    println!("Valeur a enlever : {}", *vec.get(2).unwrap());
+    println!("New : {:?}", new);
+
+
     new.map(|x| {
         print!("{} ", x);
         x

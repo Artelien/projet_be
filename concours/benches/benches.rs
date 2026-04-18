@@ -1,11 +1,15 @@
+use std::time::Duration;
+
 use criterion::{black_box, criterion_group, criterion_main, Criterion, BenchmarkGroup, measurement::WallTime};
 use concours::{Arbre, StructureDonnee, tree};
-
+use rand::{seq::SliceRandom, thread_rng};
 
 
 fn structure_full<T: StructureDonnee>(n: i32) -> T {
     let mut s = T::new();
-    for i in 0..n { s.add(i); }
+    let mut valeurs: Vec<i32> = (0..n).collect();
+    valeurs.shuffle(&mut thread_rng()); // mélange aléatoire
+    for v in valeurs { s.add(v); }
     s
 }
 
@@ -28,14 +32,16 @@ fn bench_generique<T>(c: &mut Criterion, name: &str, number: i32)
 {
     let mut structure = c.benchmark_group(name);
     
-    structure.bench_function(format!("add {} noeuds", number), |b| {
-        b.iter(|| {
-            let mut s = T::new();
-            for i in 0..number {
-                s.add(black_box(i));
-            }
-        })
-    });
+structure.bench_function(format!("add {} noeuds", number), |b| {
+    b.iter(|| {
+        let mut s = T::new();
+        let mut valeurs: Vec<i32> = (0..number).collect();
+        valeurs.shuffle(&mut rand::thread_rng());
+        for i in valeurs {
+            s.add(black_box(i));
+        }
+    })
+});
 
     structure.bench_function(format!("remove {} noeuds", number) , |b| {
         b.iter(|| {
@@ -51,7 +57,7 @@ fn bench_generique<T>(c: &mut Criterion, name: &str, number: i32)
     });
 
 
-    bench_two_structures::<T>(&mut structure, "Union", |s1, s2| s1.union(&s2), number);
+    bench_two_structures::<T>(&mut structure, "Union", |s1, s2| s1.union(s2), number);
 
     // structure.bench_function("Union", |b| {
     //     let mut s1: T = structure_full(500);
@@ -59,11 +65,11 @@ fn bench_generique<T>(c: &mut Criterion, name: &str, number: i32)
     //     b.iter(|| s1.union(&s2))
     // });
 
-    bench_two_structures::<T>(&mut structure, "Difference", |s1, s2| s1.difference(&s2), number);
+    bench_two_structures::<T>(&mut structure, "Difference", |s1, s2| s1.difference(s2), number);
 
     // structure.bench_function("Difference", |b| {
-    //     let mut s1: T = structure_full(500);
-    //     let s2: T = structure_full(500);
+    //     let mut s1: T = structure_full(number);
+    //     let s2: T = structure_full(number);
     //     b.iter(|| s1.difference(&s2))
     // });
 
@@ -74,7 +80,7 @@ fn bench_generique<T>(c: &mut Criterion, name: &str, number: i32)
         b.iter(|| s1.difference_symetrique(&mut s2))
     });
 
-    bench_two_structures::<T>(&mut structure, "Intersection", |s1, s2| {s1.intersection(&s2);}, number);
+    bench_two_structures::<T>(&mut structure, "Intersection", |s1, s2| {s1.intersection(s2);}, number);
 
 
     // structure.bench_function("Intersection", |b| {
@@ -94,8 +100,8 @@ fn bench_generique<T>(c: &mut Criterion, name: &str, number: i32)
 
 
 fn bench_tree(c: &mut Criterion){
-    bench_generique::<Arbre>(c, "Tree", 1000);
+    bench_generique::<Arbre>(c, "Tree", 10000);
 }
 
-criterion_group!(benches, bench_tree);
+criterion_group!{name = benches; config=Criterion::default().measurement_time(Duration::from_secs(15)).sample_size(50); targets = bench_tree}
 criterion_main!(benches);

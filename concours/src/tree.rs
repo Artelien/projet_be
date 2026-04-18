@@ -99,6 +99,18 @@ impl Node {
     }
 
 
+fn supprimer_min(noeud: Option<Box<Node>>) -> Option<Box<Node>> {
+    match noeud {
+        None => None,
+        Some(n) if n.left.is_none() => n.right, // ← remonte l'enfant droit
+        Some(mut n) => {
+            n.left = Node::supprimer_min(n.left.take());
+            Some(n)
+        }
+    }
+}
+
+
     fn delete_node(noeud: Option<Box<Node>>) -> Option<Box<Node>> {
         match noeud {
             None => None,
@@ -118,10 +130,10 @@ impl Node {
             Some(mut n) => {
                 // cas 3 : deux enfants
                 // on remplace par le plus petit de droite (successeur infixe)
-                let succ_value = n.right.as_ref().unwrap().successeur().value;
+                let succ_value = n.as_ref().successeur().value;
                 n.value = succ_value;
                 // on supprime le successeur du sous-arbre droit
-                n.right = Node::delete_node(n.right.take());
+                n.right = Node::supprimer_min(n.right.take());
                 Some(n)
             }
         }
@@ -192,14 +204,16 @@ impl StructureDonnee for Arbre {
     }
 
     fn remove(&mut self, value: i32) {
-        if let Some(node) = self.root.as_mut() {
-            if node.value != value || !node.is_leaf() {
-                node.remove(value);
-            } else {
-                self.root = None;
+        if self.there_is(value){
+            if let Some(node) = self.root.as_mut() {
+                if node.value != value || !node.is_leaf() {
+                    node.remove(value);
+                } else {
+                    self.root = None;
+                }
             }
+            self.size -= 1;
         }
-        self.size -= 1;
     }
 
     fn map(&self, f: impl Fn(i32) -> i32 + Copy) -> Arbre {

@@ -40,7 +40,7 @@ pub trait StructureDonnee {
         }
     }
 
-    fn difference(&mut self, other: &mut Self)
+    fn difference(&mut self, other: &Self)
     where
         Self: Sized,
     {

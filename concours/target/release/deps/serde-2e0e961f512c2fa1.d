@@ -1,0 +1,14 @@
+C:\Users\Artelien\Documents\projet_be\concours\target\release\deps\serde-2e0e961f512c2fa1.d: C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs C:\Users\Artelien\Documents\projet_be\concours\target\release\build\serde-ca321832affbf15d\out/private.rs
+
+C:\Users\Artelien\Documents\projet_be\concours\target\release\deps\libserde-2e0e961f512c2fa1.rlib: C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs C:\Users\Artelien\Documents\projet_be\concours\target\release\build\serde-ca321832affbf15d\out/private.rs
+
+C:\Users\Artelien\Documents\projet_be\concours\target\release\deps\libserde-2e0e961f512c2fa1.rmeta: C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs C:\Users\Artelien\Documents\projet_be\concours\target\release\build\serde-ca321832affbf15d\out/private.rs
+
+C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs:
+C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs:
+C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs:
+C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs:
+C:\Users\Artelien\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs:
+C:\Users\Artelien\Documents\projet_be\concours\target\release\build\serde-ca321832affbf15d\out/private.rs:
+
+# env-dep:OUT_DIR=C:\\Users\\Artelien\\Documents\\projet_be\\concours\\target\\release\\build\\serde-ca321832affbf15d\\out

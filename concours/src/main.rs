@@ -1,7 +1,7 @@
-mod arbre;
+mod tree;
 mod trait_structure;
 
-use crate::{arbre::Arbre, trait_structure::StructureDonnee};
+use crate::{tree::Arbre, trait_structure::StructureDonnee};
 
 fn main() {
     /*
@@ -83,6 +83,12 @@ fn main() {
     println!();
     new.difference(&mut tab[0]);
     new.map(|x| {
+        print!("{} ", x);
+        x
+    });
+    let inter = new.intersection(&mut tab[4]);
+    println!("\n{:?}", tab[4]);
+    inter.map(|x| {
         print!("{} ", x);
         x
     });

@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use criterion::{black_box, criterion_group, criterion_main, Criterion, BenchmarkGroup, measurement::WallTime};
-use concours::{Arbre, StructureDonnee};
+use concours::{Arbre, StructureDonnee, MyHashSet, btreeset};
 use rand::{seq::SliceRandom, thread_rng};
 
 
@@ -103,5 +103,13 @@ fn bench_tree(c: &mut Criterion){
     bench_generique::<Arbre>(c, "Tree", 10000);
 }
 
-criterion_group!{name = benches; config=Criterion::default().measurement_time(Duration::from_secs(15)).sample_size(50); targets = bench_tree}
+fn bench_hashSet(c: &mut Criterion){
+    bench_generique::<MyHashSet>(c, "HashSet", 10000);
+}
+
+fn bench_bTreeSet(c: &mut Criterion){
+    bench_generique::<MyHashSet>(c, "BTreeSet", 10000);
+}
+
+criterion_group!{name = benches; config=Criterion::default().measurement_time(Duration::from_secs(15)).sample_size(50); targets = bench_tree, bench_hashSet, bench_bTreeSet}
 criterion_main!(benches);

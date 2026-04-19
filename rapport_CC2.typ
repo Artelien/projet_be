@@ -38,7 +38,7 @@
 
 = Introduction
 
-Ce rapport présente le bilan de la première phase du projet, dont l'objectif est d'implémenter plusieurs structures de données en Rust en respectant un trait commun, puis d'évaluer leurs performances. Cette phase s'est concentrée sur l'apprentissage du langage Rust et l'implémentation d'une première structure : l'arbre binaire de recherche (BST).
+Ce rapport présente le bilan de la première phase du projet, dont l'objectif est d'implémenter plusieurs structures de données en Rust en respectant un trait commun, puis d'évaluer leurs performances. Cette phase s'est concentrée sur l'apprentissage du langage Rust et l'implémentation de trois structures : l'arbre binaire de recherche (BST), un HashSet et un BTreeSet.
 
 = Implémentation
 
@@ -64,15 +64,15 @@ pub trait StructureDonnee {
 }
 ```
 
-Les opérations ensemblistes (union, intersection, différence, différence symétrique) ont été implémentées directement dans le trait à partir de `add`, `remove`, `iter` et `there_is`. Ce choix évite de les ré-implémenter pour chaque structure.
+Les opérations ensemblistes (union, intersection, différence, différence symétrique) ont été implémentées directement dans le trait à partir de `add`, `remove`, `iter` et `there_is`. Ce choix évite de les ré-implémenter pour chaque structure et permet d'ajouter facilement de nouvelles structures.
 
 La fonction `delete` initialement prévue a été supprimée car Rust implémente le trait `Drop` qui libère la mémoire automatiquement à la sortie du scope.
 
-#colbreak()
 == Arbre binaire de recherche
 
 L'arbre binaire de recherche a été choisi comme première structure car il est bien maîtrisé. La structure est définie ainsi :
 
+#colbreak()
 ```rust
 pub struct Arbre {
     pub taille: usize,
@@ -90,6 +90,17 @@ L'utilisation de `Box<Node>` est nécessaire car Rust doit connaître la taille 
 La suppression d'un nœud gère trois cas : nœud feuille (suppression directe), nœud avec un seul enfant (remplacement par l'enfant), et nœud avec deux enfants (remplacement par le successeur infixe — le nœud le plus à gauche du sous-arbre droit).
 
 Un itérateur en profondeur (DFS) a été implémenté via une pile explicite pour parcourir l'arbre sans récursion, évitant les débordements de pile sur les grands arbres.
+
+== HashSet et BTreeSet
+
+Pour permettre la comparaison, deux structures de la bibliothèque standard ont été wrappées via le pattern _newtype_ afin de respecter la règle orpheline de Rust — qui interdit d'implémenter un trait extérieur sur un type extérieur :
+
+```rust
+pub struct MonHashSet(pub HashSet<i32>);
+pub struct MonBTree(pub BTreeSet<i32>);
+```
+
+Le `HashSet` utilise une table de hachage offrant des opérations en O(1) en moyenne, mais sans ordre garanti. Le `BTreeSet` est un arbre B équilibré de la bibliothèque standard offrant des opérations en O(log n) avec un ordre trié garanti, comparable à un BST optimisé.
 
 == Opérations ensemblistes
 
@@ -113,9 +124,9 @@ Les benchmarks ont été réalisés avec la crate Criterion #link(label("ref5"))
 
 *Environnement* : Windows 11, processeur x86\_64, avec uniquement VS Code ouvert pendant les mesures.
 
-*Paramètres* : 50 échantillons par benchmark, phase de chauffe de 3 secondes. Les structures sont remplies avec des valeurs aléatoires (crate `rand`) pour éviter la dégénérescence de l'arbre en liste chaînée lors des insertions ordonnées.
+*Paramètres* : 50 échantillons par benchmark, 15 secondes de mesure, phase de chauffe de 3 secondes (valeur par défaut Criterion). Les structures sont remplies avec des valeurs aléatoires (crate `rand`) pour éviter la dégénérescence de l'arbre en liste chaînée lors des insertions ordonnées.
 
-Les benchmarks ont été généralisés via une fonction générique contrainte par le trait, ce qui permettra de comparer toutes les structures implémentant le trait sans dupliquer le code :
+Les benchmarks ont été généralisés via une fonction générique contrainte par le trait, ce qui permet de comparer toutes les structures sans dupliquer le code :
 
 ```rust
 fn bench_generique<T: StructureDonnee>(
@@ -125,37 +136,39 @@ fn bench_generique<T: StructureDonnee>(
 
 = Résultats
 
-Les benchmarks suivants ont été réalisés sur une structure de 10 000 éléments.
+Les benchmarks ont été réalisés sur des structures de 10 000 éléments. Les temps indiqués sont les médianes des 50 mesures.
 
 #figure(
   table(
-    columns: (auto, auto),
+    columns: (auto, auto, auto, auto),
     stroke: 0.5pt,
-    align: (left, right),
-    [*Opération*], [*Temps médian*],
-    [add 10 000 nœuds], [973 µs],
-    [remove 10 000 nœuds], [1.21 ms],
-    [find], [9.4 ns],
-    [Union], [940 µs],
-    [Différence], [1.31 ms],
-    [Diff. symétrique], [32.3 ns],
-    [Intersection], [1.89 ms],
-    [Fragmenter], [2.20 ms],
+    align: (left, right, right, right),
+    [*Opération*], [*BST*], [*HashSet*], [*BTreeSet*],
+    [add 10 000], [1.05 ms], [287 µs], [284 µs],
+    [remove 10 000], [1.35 ms], [413 µs], [413 µs],
+    [find], [9.0 ns], [7.3 ns], [7.3 ns],
+    [Union], [1.14 ms], [145 µs], [143 µs],
+    [Différence], [1.35 ms], [269 µs], [270 µs],
+    [Diff. symétrique], [33.4 ns], [39.0 ns], [39.6 ns],
+    [Intersection], [1.14 ms], [145 µs], [147 µs],
+    [Fragmenter], [2.30 ms], [109 µs], [109 µs],
   ),
-  caption: [Résultats des benchmarks — Arbre BST, 10 000 éléments]
+  caption: [Résultats des benchmarks — 10 000 éléments]
 )
 
-La recherche (`find`) est particulièrement efficace à 9.4 ns grâce à la propriété BST qui réduit l'espace de recherche à chaque nœud. La différence symétrique est très rapide (32 ns) car elle bénéficie d'une implémentation optimisée évitant les modifications pendant l'itération.
+Les résultats montrent que le HashSet et le BTreeSet sont significativement plus rapides que le BST maison sur la quasi-totalité des opérations — de 3x à 20x selon l'opération. Cela s'explique par les optimisations de la bibliothèque standard (cache-friendly, équilibrage automatique) et par le fait que le BST maison n'est pas équilibré.
 
-L'intersection et la fragmentation sont les opérations les plus coûteuses (~2 ms), ce qui est attendu car elles parcourent l'intégralité de la structure.
+La différence symétrique fait exception : le BST est plus rapide (33 ns vs 39 ns) car l'implémentation profite de la propriété d'ordre du BST pour collecter les éléments communs plus efficacement.
 
-Faute d'avoir implémenté d'autres structures, aucune comparaison inter-structures n'est possible à ce stade.
+La recherche (`find`) est proche pour les trois structures (~7-9 ns), ce qui confirme la complexité O(log n) théorique du BST et du BTreeSet, et O(1) du HashSet.
+
+Le BST maison souffre probablement d'un déséquilibre résiduel malgré l'insertion aléatoire, ce qui dégrade ses performances par rapport au BTreeSet de la bibliothèque standard qui garantit l'équilibrage.
 
 = Conclusion
 
-Cette première phase a permis de poser les bases du projet : maîtrise du langage Rust, définition d'un trait commun, implémentation complète d'un arbre BST avec les opérations ensemblistes, et mise en place d'un protocole de benchmarking générique.
+Cette première phase a permis de poser les bases du projet : maîtrise du langage Rust, définition d'un trait commun, implémentation complète d'un BST avec les opérations ensemblistes, et comparaison avec deux structures de la bibliothèque standard (HashSet et BTreeSet).
 
-Les points à améliorer pour la phase suivante sont : l'implémentation de tests unitaires automatisés, l'ajout d'au moins une seconde structure de données pour permettre la comparaison, et la sérialisation/désérialisation.
+Les résultats montrent clairement l'impact des optimisations de la bibliothèque standard sur les performances. Pour la phase suivante, les priorités sont : l'implémentation de tests unitaires automatisés, l'ajout d'un arbre AVL pour comparer avec le BST maison, et la sérialisation/désérialisation.
 
 = Références
 
@@ -171,5 +184,5 @@ Les points à améliorer pour la phase suivante sont : l'implémentation de test
 [4] #label("ref4") _Apprendre le RUST partie \#3 FR_, YouTube. #link("https://www.youtube.com/watch?v=3kBk3sjREOM&list=PLrT8DrHsxZTiiAj96QukmAdedfRMsIPN5&index=3")
 
 [5] #label("ref5") Heisler B. _Criterion.rs — Statistics-driven benchmarking_, 2024. #link("https://bheisler.github.io/criterion.rs/book/")
-    
+
 [6] Dépôt source : #link("https://github.com/Artelien/projet_be")

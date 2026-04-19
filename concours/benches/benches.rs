@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use criterion::{black_box, criterion_group, criterion_main, Criterion, BenchmarkGroup, measurement::WallTime};
-use concours::{Arbre, StructureDonnee, tree};
+use concours::{Arbre, StructureDonnee};
 use rand::{seq::SliceRandom, thread_rng};
 
 

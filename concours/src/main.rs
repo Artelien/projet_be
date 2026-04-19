@@ -100,10 +100,12 @@ fn main() {
         print!("{} ", x);
         x
     });
-    let inter = new.intersection(&mut tab[4]);
+    new.intersection(&mut tab[4]);
     println!("\n{:?}", tab[4]);
-    inter.map(|x| {
+    new.map(|x| {
         print!("{} ", x);
         x
     });
+
+    drop(new);
 }

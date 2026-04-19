@@ -16,18 +16,19 @@ pub trait StructureDonnee {
     where
         Self: Sized + Clone;
 
-    fn intersection(&self, other: &Self) -> Self
+    fn intersection(&mut self, other: &Self)
     where
         Self: Sized,
     {
-        let mut iter = other.iter();
-        let mut new = Self::new();
-        while let Some(value) = iter.next() {
-            if self.there_is(*value) {
-                new.add(*value);
-            }
+        let to_remove: Vec<i32> = self
+            .iter()
+            .filter(|&&v| !other.there_is(v))
+            .copied()
+            .collect();
+
+        for v in to_remove {
+            self.remove(v);
         }
-        new
     }
 
     fn union(&mut self, other: &Self)

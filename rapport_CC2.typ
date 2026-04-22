@@ -33,7 +33,7 @@
       #line(length: 100%, stroke: 0.5pt)
       #v(0.5em)
     ]
-  })
+  }),
 )
 
 = Introduction
@@ -153,7 +153,7 @@ Les benchmarks ont été réalisés sur des structures de 10 000 éléments. Les
     [Intersection], [1.14 ms], [145 µs], [147 µs],
     [Fragmenter], [2.30 ms], [109 µs], [109 µs],
   ),
-  caption: [Résultats des benchmarks — 10 000 éléments]
+  caption: [Résultats des benchmarks — 10 000 éléments],
 )
 
 Les résultats montrent que le HashSet et le BTreeSet sont significativement plus rapides que le BST maison sur la quasi-totalité des opérations — de 3x à 20x selon l'opération. Cela s'explique par les optimisations de la bibliothèque standard (cache-friendly, équilibrage automatique) et par le fait que le BST maison n'est pas équilibré.
